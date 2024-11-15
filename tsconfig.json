@@ -1,10 +1,15 @@
 {
-	"extends": "@sindresorhus/tsconfig",
-	"include": ["api"],
-	"compilerOptions": {
-		"outDir": "public",
-		"strict": false,
-		"strictNullChecks": false,
-		"sourceMap": true
-	}
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": "dist",
+    "rootDir": "./",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*", "api/**/*"],
+  "exclude": ["node_modules"]
 }
