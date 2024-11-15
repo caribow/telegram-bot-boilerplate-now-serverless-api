@@ -1,0 +1,39 @@
+// src/lib/telegram.ts
+import { Context } from 'telegraf';
+import axios from 'axios';
+
+interface DifyResponse {
+  answer: string;
+  conversation_id: string;
+}
+
+export const handleMessage = async (ctx: Context) => {
+  try {
+    if ('text' in ctx.message) {
+      await ctx.sendChatAction('typing');
+
+      const response = await axios.post(
+        `${process.env.DIFY_API_ENDPOINT}/chat-messages`,
+        {
+          inputs: {},
+          query: ctx.message.text,
+          response_mode: 'blocking',
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.DIFY_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const difyResponse = response.data as DifyResponse;
+      await ctx.reply(difyResponse.answer, {
+        reply_to_message_id: ctx.message.message_id,
+      });
+    }
+  } catch (error) {
+    console.error('Error handling message:', error);
+    await ctx.reply('Sorry, there was an error processing your message.');
+  }
+};
